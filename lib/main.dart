@@ -1,6 +1,9 @@
 // ignore_for_file: unnecessary_null_comparison
 
+import 'package:calculator/history.dart';
 import 'package:flutter/material.dart';
+
+import 'model/history_singleton.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,28 +30,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // List<String> calcButtonList = [
-  //   "CLEAR",
-  //   "DEL",
-  //   "7",
-  //   "8",
-  //   "9",
-  //   "/",
-  //   "4",
-  //   "5",
-  //   "6",
-  //   "x",
-  //   "1",
-  //   "2",
-  //   "3",
-  //   "-",
-  //   ".",
-  //   "0",
-  //   "00",
-  //   "+",
-  //   "=",
-
-  // ];
   List calcButtonList = [
     "7",
     "8",
@@ -76,11 +57,38 @@ class _HomePageState extends State<HomePage> {
   String res = "";
   String text = "";
 
+  void handleClick(String value) {
+    switch (value) {
+      case 'History':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CalculationHistoryPage(),
+          ),
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calculator'),
+        actions: [
+          PopupMenuButton<String>(
+            tooltip: "History",
+            onSelected: handleClick,
+            itemBuilder: (BuildContext context) {
+              return {'History'}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -173,59 +181,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // void btnClicked(String btnText) {
-  //   if (btnText == "CLEAR") {
-  //     setState(() {
-  //       text = "";
-  //       res = "";
-  //     });
-  //   } else if (btnText == "+" ||
-  //       btnText == "-" ||
-  //       btnText == "x" ||
-  //       btnText == "/") {
-  //     setState(() {
-  //       if (text.isNotEmpty) {
-  //         first = double.parse(text);
-  //         currentOperation = btnText;
-  //         text += " $btnText ";
-  //       }
-  //     });
-  //   } else if (btnText == "=") {
-  //     setState(() {
-  //       if (text.isNotEmpty && currentOperation != null) {
-  //         List<String> parts = text.split(" ");
-  //         if (parts.length >= 3) {
-  //           double result = double.parse(parts[0]);
-  //           for (int i = 1; i < parts.length; i += 2) {
-  //             String op = parts[i];
-  //             double num = double.parse(parts[i + 1]);
-  //             if (op == "+") {
-  //               result += num;
-  //             } else if (op == "-") {
-  //               result -= num;
-  //             } else if (op == "x") {
-  //               result *= num;
-  //             } else if (op == "/") {
-  //               result /= num;
-  //             }
-  //           }
-  //           res = result.toString();
-  //         }
-  //       }
-  //     });
-  //   } else if (btnText == "DEL") {
-  //     setState(() {
-  //       if (text.isNotEmpty) {
-  //         text = text.substring(0, text.length - 1);
-  //       }
-  //     });
-  //   } else {
-  //     setState(() {
-  //       text += btnText;
-  //     });
-  //   }
-  // }
-
   void btnClicked(String btnText) {
     if (btnText == "CLEAR") {
       setState(() {
@@ -268,6 +223,7 @@ class _HomePageState extends State<HomePage> {
               }
             }
             res = result.toString();
+            CalculationHistory().addCalculation({"text": text, "result": res});
           } else {
             res = text;
           }
