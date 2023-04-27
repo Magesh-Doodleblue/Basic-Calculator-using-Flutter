@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: unnecessary_null_comparison, library_private_types_in_public_api
 
 import 'package:calculator/history.dart';
 import 'package:flutter/material.dart';
@@ -48,8 +48,8 @@ class _HomePageState extends State<HomePage> {
     "00",
     "+",
     "CLEAR",
-    "=",
     "DEL",
+    "=",
   ];
 
   late String currentOperation;
@@ -159,7 +159,7 @@ class _HomePageState extends State<HomePage> {
   Widget customOutlineButton(String val) {
     return SizedBox(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(13.0),
         child: TextButton(
           onPressed: () => btnClicked(val),
           child: Text(
