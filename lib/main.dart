@@ -1,4 +1,5 @@
-// ignore_for_file: library_private_types_in_public_api, camel_case_types
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -6,7 +7,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +20,62 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  // List<String> calcButtonList = [
+  //   "CLEAR",
+  //   "DEL",
+  //   "7",
+  //   "8",
+  //   "9",
+  //   "/",
+  //   "4",
+  //   "5",
+  //   "6",
+  //   "x",
+  //   "1",
+  //   "2",
+  //   "3",
+  //   "-",
+  //   ".",
+  //   "0",
+  //   "00",
+  //   "+",
+  //   "=",
+
+  // ];
+  List calcButtonList = [
+    "7",
+    "8",
+    "9",
+    "/",
+    "4",
+    "5",
+    "6",
+    "x",
+    "1",
+    "2",
+    "3",
+    "-",
+    ".",
+    "0",
+    "00",
+    "+",
+    "CLEAR",
+    "=",
+    "DEL",
+  ];
+
+  late String currentOperation;
+  late double first, second;
+  String res = "";
+  String text = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,218 +85,65 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          calcText(),
-          const Spacer(
-            flex: 2,
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: const EdgeInsets.all(10.0),
+              alignment: Alignment.bottomRight,
+              child: Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           ),
-          rowOne(context),
-          rowTwo(context),
-          rowThree(context),
-          rowFour(context),
-          rowFive(context)
+          const Divider(color: Colors.black, thickness: 1),
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: const EdgeInsets.all(10.0),
+              alignment: Alignment.bottomRight,
+              child: Text(
+                res,
+                style: const TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+          const Spacer(),
+          Expanded(
+            flex: 5,
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                childAspectRatio: 1.41,
+                crossAxisSpacing: 1.0,
+                mainAxisSpacing: 1.0,
+              ),
+              itemCount: calcButtonList.length,
+              itemBuilder: (BuildContext context, int index) {
+                String buttonText = calcButtonList[index];
+                return Container(
+                  decoration: containerDecoration(),
+                  child: customOutlineButton(buttonText),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Row rowFive(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width / 2,
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 1,
-              color: Colors.black.withOpacity(0.2),
-            ),
-          ),
-          child: customOutlineButton("CLEAR"),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width / 2,
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 1,
-              color: Colors.black.withOpacity(0.2),
-            ),
-          ),
-          child: customOutlineButton("="),
-        ),
-      ],
-    );
-  }
-
-  Row rowFour(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 1,
-              color: Colors.black.withOpacity(0.2),
-            ),
-          ),
-          child: customOutlineButton("."),
-        ),
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("0")),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 1,
-              color: Colors.black.withOpacity(0.2),
-            ),
-          ),
-          child: customOutlineButton("00"),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 1,
-              color: Colors.black.withOpacity(0.2),
-            ),
-          ),
-          child: customOutlineButton("+"),
-        ),
-      ],
-    );
-  }
-
-  Row rowThree(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("1")),
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("2")),
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("3")),
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("-")),
-      ],
-    );
-  }
-
-  Row rowTwo(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("4")),
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("5")),
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("6")),
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("x")),
-      ],
-    );
-  }
-
-  Row rowOne(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("7")),
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("8")),
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("9")),
-        Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 1,
-                color: Colors.black.withOpacity(0.2),
-              ),
-            ),
-            child: customOutlineButton("/")),
-      ],
-    );
-  }
-
-  Expanded calcText() {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        alignment: Alignment.bottomRight,
-        child: Text(
-          text.isEmpty ? "0" : text,
-          style: const TextStyle(
-            fontSize: 60.0,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+  BoxDecoration containerDecoration() {
+    return BoxDecoration(
+      border: Border.all(
+        width: 1,
+        color: Colors.black.withOpacity(0.2),
       ),
     );
   }
@@ -260,8 +157,14 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             val,
             style: TextStyle(
-              fontSize: val == "CLEAR" ? 19 : 26,
-              fontWeight: val == "CLEAR" ? FontWeight.bold : FontWeight.w500,
+              fontSize: val == "CLEAR"
+                  ? 16
+                  : val == "DEL"
+                      ? 20
+                      : 26,
+              fontWeight: val == "CLEAR" || val == "DEL"
+                  ? FontWeight.bold
+                  : FontWeight.w500,
               color: const Color.fromARGB(255, 0, 0, 0),
             ),
           ),
@@ -270,36 +173,110 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  late String currentOperation;
-  late double first, second;
-  late String res;
-  String text = "";
+  // void btnClicked(String btnText) {
+  //   if (btnText == "CLEAR") {
+  //     setState(() {
+  //       text = "";
+  //       res = "";
+  //     });
+  //   } else if (btnText == "+" ||
+  //       btnText == "-" ||
+  //       btnText == "x" ||
+  //       btnText == "/") {
+  //     setState(() {
+  //       if (text.isNotEmpty) {
+  //         first = double.parse(text);
+  //         currentOperation = btnText;
+  //         text += " $btnText ";
+  //       }
+  //     });
+  //   } else if (btnText == "=") {
+  //     setState(() {
+  //       if (text.isNotEmpty && currentOperation != null) {
+  //         List<String> parts = text.split(" ");
+  //         if (parts.length >= 3) {
+  //           double result = double.parse(parts[0]);
+  //           for (int i = 1; i < parts.length; i += 2) {
+  //             String op = parts[i];
+  //             double num = double.parse(parts[i + 1]);
+  //             if (op == "+") {
+  //               result += num;
+  //             } else if (op == "-") {
+  //               result -= num;
+  //             } else if (op == "x") {
+  //               result *= num;
+  //             } else if (op == "/") {
+  //               result /= num;
+  //             }
+  //           }
+  //           res = result.toString();
+  //         }
+  //       }
+  //     });
+  //   } else if (btnText == "DEL") {
+  //     setState(() {
+  //       if (text.isNotEmpty) {
+  //         text = text.substring(0, text.length - 1);
+  //       }
+  //     });
+  //   } else {
+  //     setState(() {
+  //       text += btnText;
+  //     });
+  //   }
+  // }
 
   void btnClicked(String btnText) {
     if (btnText == "CLEAR") {
       setState(() {
         text = "";
+        res = "";
       });
     } else if (btnText == "+" ||
         btnText == "-" ||
         btnText == "x" ||
         btnText == "/") {
       setState(() {
-        first = double.parse(text);
-        currentOperation = btnText;
-        text = "";
+        if (text.isNotEmpty) {
+          text += " $btnText ";
+        }
       });
     } else if (btnText == "=") {
       setState(() {
-        second = double.parse(text);
-        if (currentOperation == "+") {
-          text = (first + second).toString();
-        } else if (currentOperation == "-") {
-          text = (first - second).toString();
-        } else if (currentOperation == "x") {
-          text = (first * second).toString();
-        } else if (currentOperation == "/") {
-          text = (first / second).toString();
+        if (text.isNotEmpty) {
+          List<String> parts = text.split(" ");
+          if (parts.length >= 3) {
+            double result = double.parse(parts[0]);
+            String op = "";
+            for (int i = 1; i < parts.length; i++) {
+              String part = parts[i];
+              if (part == "+" || part == "-" || part == "x" || part == "/") {
+                op = part;
+              } else {
+                double num = double.parse(part);
+                if (op == "+") {
+                  result += num;
+                } else if (op == "-") {
+                  result -= num;
+                } else if (op == "x") {
+                  result *= num;
+                } else if (op == "/") {
+                  result /= num;
+                } else {
+                  result = num;
+                }
+              }
+            }
+            res = result.toString();
+          } else {
+            res = text;
+          }
+        }
+      });
+    } else if (btnText == "DEL") {
+      setState(() {
+        if (text.isNotEmpty) {
+          text = text.substring(0, text.length - 1);
         }
       });
     } else {
