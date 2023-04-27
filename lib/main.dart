@@ -1,22 +1,26 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, camel_case_types
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(myApp());
+  runApp(const MyApp());
 }
 
-class myApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(),
-      home: HomePage(),
+      home: const HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -256,9 +260,10 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             val,
             style: TextStyle(
-                fontSize: val == "CLEAR" ? 19 : 26,
-                fontWeight: val == "CLEAR" ? FontWeight.bold : FontWeight.w500,
-                color: const Color.fromARGB(255, 0, 0, 0)),
+              fontSize: val == "CLEAR" ? 19 : 26,
+              fontWeight: val == "CLEAR" ? FontWeight.bold : FontWeight.w500,
+              color: const Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
         ),
       ),
@@ -269,7 +274,6 @@ class _HomePageState extends State<HomePage> {
   late double first, second;
   late String res;
   String text = "";
-  late String opp;
 
   void btnClicked(String btnText) {
     if (btnText == "CLEAR") {
