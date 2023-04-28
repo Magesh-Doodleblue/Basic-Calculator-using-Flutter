@@ -54,60 +54,68 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    text,
-                    style: const TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-              // const Divider(color: Colors.black, thickness: 1),
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                alignment: Alignment.topRight,
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    res,
-                    style: const TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Spacer(),
-          Container(
-            height: MediaQuery.of(context).size.height / 2.4,
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                childAspectRatio: 1.41,
-                crossAxisSpacing: 1.0,
-                mainAxisSpacing: 1.0,
-              ),
-              itemCount: calcButtonList.length,
-              itemBuilder: (BuildContext context, int index) {
-                String buttonText = calcButtonList[index];
-                return Container(
-                  decoration: containerDecoration(),
-                  child: customOutlineButton(buttonText),
-                );
-              },
-            ),
-          ),
+          inputAndOutput(),
+          const Spacer(),
+          gridViewBuilderForKeyboard(context),
         ],
       ),
+    );
+  }
+
+  SizedBox gridViewBuilderForKeyboard(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height / 2.4,
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          childAspectRatio: 1.41,
+          crossAxisSpacing: 1.0,
+          mainAxisSpacing: 1.0,
+        ),
+        itemCount: calcButtonList.length,
+        itemBuilder: (BuildContext context, int index) {
+          String buttonText = calcButtonList[index];
+          return Container(
+            decoration: containerDecoration(),
+            child: customOutlineButton(buttonText),
+          );
+        },
+      ),
+    );
+  }
+
+  Column inputAndOutput() {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10.0),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+        // const Divider(color: Colors.black, thickness: 1),
+        Container(
+          padding: const EdgeInsets.all(10.0),
+          alignment: Alignment.topRight,
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Text(
+              res,
+              style: const TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
