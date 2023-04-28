@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'model/history_singleton.dart';
+import '../../model/history_singleton.dart';
 
 class CalculationHistoryPage extends StatelessWidget {
   final CalculationHistory _calculationHistory = CalculationHistory();
@@ -13,11 +13,14 @@ class CalculationHistoryPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Calculation History'),
         actions: [
-          ElevatedButton(
+          TextButton(
             onPressed: () {
               _calculationHistory.removeHistory();
             },
-            child: const Text('Clear'),
+            child: const Text(
+              'Clear',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
