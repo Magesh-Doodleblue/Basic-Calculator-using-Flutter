@@ -14,11 +14,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late String currentOperation;
-  late double first, second;
-  String res = "";
-  String text = "";
-
   void handleClick(String value) {
     switch (value) {
       case 'History':

@@ -20,3 +20,8 @@ List calcButtonList = [
   "=",
   "%"
 ];
+
+late String currentOperation;
+late double first, second;
+String res = "";
+String text = "";
