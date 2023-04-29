@@ -31,12 +31,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   widget.toggleDarkMode();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +83,7 @@ class _HomePageState extends State<HomePage> {
               btnClicked(buttonText);
             },
             child: Container(
-              decoration: containerDecoration(),
+              decoration: containerDecoration(context),
               child: customOutlineButton(buttonText),
             ),
           );
@@ -99,6 +93,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Column inputAndOutput() {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
@@ -110,7 +105,9 @@ class _HomePageState extends State<HomePage> {
             style: TextStyle(
               fontSize: isEqualto ? 48 : 36,
               fontWeight: FontWeight.w500,
-              color: Colors.black,
+              color: theme.brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
             ),
             duration: const Duration(milliseconds: 200),
             child: Text(
@@ -125,7 +122,9 @@ class _HomePageState extends State<HomePage> {
             style: TextStyle(
               fontSize: isEqualto ? 36 : 48,
               fontWeight: FontWeight.w500,
-              color: Colors.black,
+              color: theme.brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
             ),
             duration: const Duration(milliseconds: 200),
             child: Text(
@@ -137,16 +136,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  BoxDecoration containerDecoration() {
+  BoxDecoration containerDecoration(BuildContext context) {
+    final theme = Theme.of(context);
     return BoxDecoration(
       border: Border.all(
         width: 1,
-        color: Colors.black.withOpacity(0.2),
+        color: theme.brightness == Brightness.dark
+            ? Colors.white.withOpacity(0.2)
+            : Colors.black.withOpacity(0.2),
       ),
     );
   }
 
   Widget customOutlineButton(String val) {
+    final theme = Theme.of(context);
+
     return SizedBox(
       child: Padding(
         padding: const EdgeInsets.all(13.0),
@@ -162,7 +166,10 @@ class _HomePageState extends State<HomePage> {
             fontWeight: val == "CLEAR" || val == "DEL"
                 ? FontWeight.bold
                 : FontWeight.w500,
-            color: const Color.fromARGB(255, 0, 0, 0),
+            // color: const Color.fromARGB(255, 0, 0, 0),
+            color: theme.brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
           ),
         ),
       ),

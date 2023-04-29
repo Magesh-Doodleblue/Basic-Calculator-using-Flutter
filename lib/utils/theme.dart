@@ -2,15 +2,28 @@ import 'package:flutter/material.dart';
 
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
-  primaryColor: Colors.grey[900],
-  scaffoldBackgroundColor: Colors.grey[900],
-  // colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.grey[600]),
+  useMaterial3: true,
+  scaffoldBackgroundColor: const Color(0xFF28282B),
+  textTheme: const TextTheme(
+    titleLarge: TextStyle(
+      color: Colors.white,
+    ),
+    bodyMedium: TextStyle(
+      color: Colors.white,
+    ),
+  ),
 );
-//
-//
+
 final lightTheme = ThemeData(
   brightness: Brightness.light,
-  primaryColor: Colors.blue,
+  useMaterial3: true,
   scaffoldBackgroundColor: Colors.white,
-  // colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.blueAccent),
+  textTheme: const TextTheme(
+    titleLarge: TextStyle(
+      color: Colors.black,
+    ),
+    bodyMedium: TextStyle(
+      color: Colors.black,
+    ),
+  ),
 );

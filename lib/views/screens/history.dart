@@ -12,8 +12,8 @@ class CalculationHistoryPage extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("History"),
-          content: const Text("Do you want to Clear all History"),
+          title: const Text("Clear History"),
+          content: const Text("Do you want to Clear all History?"),
           actions: [
             TextButton(
               child: const Text("Nope"),
@@ -48,33 +48,6 @@ class CalculationHistoryPage extends StatelessWidget {
           ),
         ],
       ),
-      // body: ListView.builder(
-      //   itemCount: _calculationHistory.getHistory().length,
-      //   itemBuilder: (BuildContext context, int index) {
-      //     Map<String, String> calculation =
-      //         _calculationHistory.getHistory()[index];
-      //     return Padding(
-      //       padding: const EdgeInsets.all(8.0),
-      //       child: Container(
-      //         decoration: BoxDecoration(
-      //           borderRadius: BorderRadius.circular(13),
-      //           color: Colors.grey.withOpacity(0.42),
-      //         ),
-      //         height: 70,
-      // child: ListTile(
-      //   title: Text(
-      //     calculation["text"]!,
-      //     style: styleFont(21),
-      //   ),
-      //   subtitle: Text(
-      //     calculation["result"]!,
-      //     style: styleFont(18),
-      //   ),
-      // ),
-      //       ),
-      //     );
-      //   },
-      // ),
       body: FutureBuilder<List<Map<String, String>>>(
         future: Future.delayed(const Duration(milliseconds: 0),
             () => CalculationHistory().getHistory()),
@@ -107,18 +80,26 @@ class CalculationHistoryPage extends StatelessWidget {
           child: Container(
             decoration: containerDecoration(),
             child: ListTile(
-              title: Text(
-                calculation["text"]!,
-                style: styleFont(18),
-              ),
-              subtitle: Text(
-                calculation["result"]!,
-                style: styleFont(16),
-              ),
+              title: listTextForHistory(calculation),
+              subtitle: listSubTextForHistory(calculation),
             ),
           ),
         );
       },
+    );
+  }
+
+  Text listSubTextForHistory(Map<String, String> calculation) {
+    return Text(
+      calculation["result"]!,
+      style: styleFont(16),
+    );
+  }
+
+  Text listTextForHistory(Map<String, String> calculation) {
+    return Text(
+      calculation["text"]!,
+      style: styleFont(18),
     );
   }
 
