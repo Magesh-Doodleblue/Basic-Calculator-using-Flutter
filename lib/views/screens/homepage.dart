@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import '../../model/history_singleton.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/constant.dart';
 import 'history.dart';
 
@@ -32,16 +31,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    widget.toggleDarkMode();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   widget.toggleDarkMode();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final prefs = SharedPreferences.getInstance();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calculator'),

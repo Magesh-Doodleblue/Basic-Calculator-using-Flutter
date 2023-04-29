@@ -6,9 +6,9 @@ import 'views/screens/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyApp extends StatefulWidget {
-  final bool isDarkMode;
+  final SharedPreferences prefs;
 
-  const MyApp({Key? key, required this.isDarkMode}) : super(key: key);
+  const MyApp({Key? key, required this.prefs}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -20,14 +20,13 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    isDarkEnable = widget.isDarkMode;
+    isDarkEnable = widget.prefs.getBool('isDarkMode') ?? false;
   }
 
   void _toggleDarkMode() async {
-    final prefs = await SharedPreferences.getInstance();
     setState(() {
       isDarkEnable = !isDarkEnable;
-      prefs.setBool('isDarkMode', isDarkEnable);
+      widget.prefs.setBool('isDarkMode', isDarkEnable);
     });
   }
 
