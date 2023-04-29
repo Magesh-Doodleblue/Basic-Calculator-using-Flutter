@@ -1,13 +1,18 @@
 // ignore_for_file: unrelated_type_equality_checks, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-
 import '../../model/history_singleton.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/constant.dart';
 import 'history.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final VoidCallback toggleDarkMode;
+  final bool isDarkEnable;
+
+  const HomePage(
+      {Key? key, required this.toggleDarkMode, required this.isDarkEnable})
+      : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -28,11 +33,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    widget.toggleDarkMode();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final prefs = SharedPreferences.getInstance();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calculator'),
         actions: [
+          IconButton(
+            onPressed: widget.toggleDarkMode,
+            icon: Icon(widget.isDarkEnable ? Icons.dark_mode : Icons.sunny),
+          ),
           PopupMenuButton<String>(
             tooltip: "History",
             onSelected: handleClick,
@@ -49,7 +66,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          inputAndOutput(),
+          Align(alignment: Alignment.topRight, child: inputAndOutput()),
           const Spacer(),
           gridViewBuilderForKeyboard(context),
         ],
@@ -70,9 +87,14 @@ class _HomePageState extends State<HomePage> {
         itemCount: calcButtonList.length,
         itemBuilder: (BuildContext context, int index) {
           String buttonText = calcButtonList[index];
-          return Container(
-            decoration: containerDecoration(),
-            child: customOutlineButton(buttonText),
+          return InkWell(
+            onTap: () {
+              btnClicked(buttonText);
+            },
+            child: Container(
+              decoration: containerDecoration(),
+              child: customOutlineButton(buttonText),
+            ),
           );
         },
       ),
@@ -81,32 +103,36 @@ class _HomePageState extends State<HomePage> {
 
   Column inputAndOutput() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Container(
-          padding: const EdgeInsets.all(10.0),
-          child: Align(
-            alignment: Alignment.bottomRight,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AnimatedDefaultTextStyle(
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              fontSize: isEqualto ? 48 : 36,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+            duration: const Duration(milliseconds: 200),
             child: Text(
               text,
-              style: const TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w500,
-              ),
             ),
           ),
         ),
-        // const Divider(color: Colors.black, thickness: 1),
-        Container(
-          padding: const EdgeInsets.all(10.0),
-          alignment: Alignment.topRight,
-          child: Align(
-            alignment: Alignment.bottomRight,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AnimatedDefaultTextStyle(
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              fontSize: isEqualto ? 36 : 48,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+            duration: const Duration(milliseconds: 200),
             child: Text(
               res,
-              style: const TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.w500,
-              ),
             ),
           ),
         ),
@@ -127,21 +153,19 @@ class _HomePageState extends State<HomePage> {
     return SizedBox(
       child: Padding(
         padding: const EdgeInsets.all(13.0),
-        child: TextButton(
-          onPressed: () => btnClicked(val),
-          child: Text(
-            val,
-            style: TextStyle(
-              fontSize: val == "CLEAR"
-                  ? 15
-                  : val == "DEL"
-                      ? 18
-                      : 24,
-              fontWeight: val == "CLEAR" || val == "DEL"
-                  ? FontWeight.bold
-                  : FontWeight.w500,
-              color: const Color.fromARGB(255, 0, 0, 0),
-            ),
+        child: Text(
+          val,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: val == "CLEAR"
+                ? 15
+                : val == "DEL"
+                    ? 18
+                    : 24,
+            fontWeight: val == "CLEAR" || val == "DEL"
+                ? FontWeight.bold
+                : FontWeight.w500,
+            color: const Color.fromARGB(255, 0, 0, 0),
           ),
         ),
       ),
@@ -151,6 +175,7 @@ class _HomePageState extends State<HomePage> {
   void btnClicked(String btnText) {
     if (btnText == "CLEAR") {
       setState(() {
+        isEqualto = true;
         text = "";
         res = "";
       });
@@ -165,6 +190,7 @@ class _HomePageState extends State<HomePage> {
       });
     } else if (btnText == "=") {
       setState(() {
+        isEqualto = false;
         if (text.isNotEmpty) {
           List<String> parts = text.split(" ");
           if (parts.length >= 3) {
@@ -212,7 +238,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         if (text.isNotEmpty) {
           List<String> parts = text.split(" ");
-          if (parts.length >= 1) {
+          if (parts.isNotEmpty) {
             double num = double.parse(parts.last);
             num /= 100;
             text = text.substring(0, text.length - parts.last.length) +
@@ -222,11 +248,7 @@ class _HomePageState extends State<HomePage> {
       });
     } else {
       setState(() {
-        if (btnText == "0" && text.isEmpty && text.startsWith("0")) {
-          text = "0 +$text";
-        } else {
-          text += btnText;
-        }
+        text += btnText;
       });
     }
   }

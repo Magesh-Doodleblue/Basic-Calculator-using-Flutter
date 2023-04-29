@@ -13,7 +13,7 @@ List calcButtonList = [
   "-",
   ".",
   "0",
-  "00",
+  "^",
   "+",
   "CLEAR",
   "DEL",
@@ -25,3 +25,6 @@ late String currentOperation;
 late double first, second;
 String res = "";
 String text = "";
+
+bool isEqualto = true;
+bool isDarkMode = false;
