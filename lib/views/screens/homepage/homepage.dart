@@ -1,9 +1,10 @@
 // ignore_for_file: unrelated_type_equality_checks, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import '../../model/history_singleton.dart';
-import '../../utils/constant.dart';
-import 'history.dart';
+import '../../../model/history_singleton.dart';
+import '../../../utils/constant.dart';
+import '../../../utils/homepage_styles.dart';
+import '../history/history.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback toggleDarkMode;
@@ -83,7 +84,7 @@ class _HomePageState extends State<HomePage> {
               btnClicked(buttonText);
             },
             child: Container(
-              decoration: containerDecoration(context),
+              decoration: gridContainerDecoration(context),
               child: customOutlineButton(buttonText),
             ),
           );
@@ -136,18 +137,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  BoxDecoration containerDecoration(BuildContext context) {
-    final theme = Theme.of(context);
-    return BoxDecoration(
-      border: Border.all(
-        width: 1,
-        color: theme.brightness == Brightness.dark
-            ? Colors.white.withOpacity(0.2)
-            : Colors.black.withOpacity(0.2),
-      ),
-    );
-  }
-
   Widget customOutlineButton(String val) {
     final theme = Theme.of(context);
 
@@ -161,7 +150,7 @@ class _HomePageState extends State<HomePage> {
             fontSize: val == "CLEAR"
                 ? 15
                 : val == "DEL"
-                    ? 18
+                    ? 17
                     : 24,
             fontWeight: val == "CLEAR" || val == "DEL"
                 ? FontWeight.bold
@@ -230,6 +219,16 @@ class _HomePageState extends State<HomePage> {
           } else {
             res = text;
           }
+        }
+      });
+    } else if (btnText == "^") {
+      setState(() {
+        if (text.isNotEmpty) {
+          List<String> parts = text.split(" ");
+          String lastPart = parts[parts.length - 1];
+          double num = double.tryParse(lastPart) ?? 0;
+          text = text.substring(0, text.lastIndexOf(lastPart)) +
+              (num * num).toString();
         }
       });
     } else if (btnText == "DEL") {

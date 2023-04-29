@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import '../../../model/history_singleton.dart';
+import '../../../utils/history_styles.dart';
+import '../../../utils/theme.dart';
+import '../../../utils/toast.dart';
 
-import '../../model/history_singleton.dart';
+class CalculationHistoryPage extends StatefulWidget {
+  const CalculationHistoryPage({super.key});
 
-class CalculationHistoryPage extends StatelessWidget {
+  @override
+  State<CalculationHistoryPage> createState() => _CalculationHistoryPageState();
+}
+
+class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
   final CalculationHistory _calculationHistory = CalculationHistory();
-
-  CalculationHistoryPage({super.key});
 
   dialogBox(BuildContext context) {
     showDialog(
@@ -75,44 +82,36 @@ class CalculationHistoryPage extends StatelessWidget {
       itemCount: history.length,
       itemBuilder: (BuildContext context, int index) {
         Map<String, String> calculation = history[index];
-        return Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-          child: Container(
-            decoration: containerDecoration(),
-            child: ListTile(
-              title: listTextForHistory(calculation),
-              subtitle: listSubTextForHistory(calculation),
+        return Dismissible(
+          key: UniqueKey(),
+          onDismissed: (direction) {
+            setState(() {
+              history.removeAt(index);
+            });
+            // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            //     content: Text("Calculation deleted"),
+            //     duration: Duration(seconds: 1)));
+            showToast("Calculation deleted", context);
+          },
+          direction: DismissDirection.endToStart,
+          background: Container(
+            color: bgColorForListtile,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            child: const Icon(Icons.delete, color: Colors.white),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+            child: Container(
+              decoration: containerDecoration(),
+              child: ListTile(
+                title: listTextForHistory(calculation),
+                subtitle: listSubTextForHistory(calculation),
+              ),
             ),
           ),
         );
       },
-    );
-  }
-
-  Text listSubTextForHistory(Map<String, String> calculation) {
-    return Text(
-      calculation["result"]!,
-      style: styleFont(16),
-    );
-  }
-
-  Text listTextForHistory(Map<String, String> calculation) {
-    return Text(
-      calculation["text"]!,
-      style: styleFont(18),
-    );
-  }
-
-  BoxDecoration containerDecoration() {
-    return BoxDecoration(
-      borderRadius: BorderRadius.circular(9),
-      color: Colors.grey.withOpacity(0.32),
-    );
-  }
-
-  TextStyle styleFont(int size) {
-    return TextStyle(
-      fontSize: size.toDouble(),
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const bgColorForListtile = Color(0xFF28282B);
+
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
   useMaterial3: true,
