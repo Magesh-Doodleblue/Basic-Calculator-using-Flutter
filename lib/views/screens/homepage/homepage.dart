@@ -165,7 +165,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-//
   void btnClicked(String btnText) {
     if (btnText == "CLEAR") {
       setState(() {
