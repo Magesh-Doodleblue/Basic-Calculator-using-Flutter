@@ -1,6 +1,8 @@
 // ignore_for_file: unrelated_type_equality_checks, library_private_types_in_public_api
 
+import 'package:calculator/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../model/history_singleton.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/homepage_styles.dart';
@@ -25,7 +27,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CalculationHistoryPage(),
+            builder: (context) => const CalculationHistoryPage(),
           ),
         );
         break;
@@ -103,12 +105,11 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(8.0),
           child: AnimatedDefaultTextStyle(
             textAlign: TextAlign.end,
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: isEqualto ? 48 : 36,
               fontWeight: FontWeight.w500,
-              color: theme.brightness == Brightness.dark
-                  ? Colors.white
-                  : Colors.black,
+              color:
+                  theme.brightness == Brightness.dark ? whiteColor : blackColor,
             ),
             duration: const Duration(milliseconds: 200),
             child: Text(
@@ -120,12 +121,11 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(8.0),
           child: AnimatedDefaultTextStyle(
             textAlign: TextAlign.end,
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: isEqualto ? 36 : 48,
               fontWeight: FontWeight.w500,
-              color: theme.brightness == Brightness.dark
-                  ? Colors.white
-                  : Colors.black,
+              color:
+                  theme.brightness == Brightness.dark ? whiteColor : blackColor,
             ),
             duration: const Duration(milliseconds: 200),
             child: Text(
@@ -154,11 +154,9 @@ class _HomePageState extends State<HomePage> {
                     : 24,
             fontWeight: val == "CLEAR" || val == "DEL"
                 ? FontWeight.bold
-                : FontWeight.w500,
-            // color: const Color.fromARGB(255, 0, 0, 0),
-            color: theme.brightness == Brightness.dark
-                ? Colors.white
-                : Colors.black,
+                : FontWeight.w600,
+            color:
+                theme.brightness == Brightness.dark ? whiteColor : blackColor,
           ),
         ),
       ),
@@ -231,6 +229,7 @@ class _HomePageState extends State<HomePage> {
               (num * num).toString();
         }
       });
+      CalculationHistory().addCalculation({"text": text, "result": res});
     } else if (btnText == "DEL") {
       setState(() {
         if (text.isNotEmpty) {
@@ -249,10 +248,12 @@ class _HomePageState extends State<HomePage> {
           }
         }
       });
+      CalculationHistory().addCalculation({"text": text, "result": res});
     } else {
       setState(() {
         text += btnText;
       });
+      CalculationHistory().addCalculation({"text": text, "result": res});
     }
   }
 }

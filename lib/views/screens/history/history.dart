@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../model/history_singleton.dart';
+import '../../../utils/colors.dart';
 import '../../../utils/history_styles.dart';
 import '../../../utils/theme.dart';
 import '../../../utils/toast.dart';
@@ -18,10 +19,28 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Clear History"),
-          content: const Text("Do you want to Clear all History?"),
-          actions: [
+        // return AlertDialog(
+        //   // backgroundColor: Color.fromARGB(255, 26, 26, 26),
+        //   title: const Text("Clear History"),
+        //   content: const Text("Do you want to Clear all History?"),
+        //   actions: [
+        // TextButton(
+        //   child: const Text("Nope"),
+        //   onPressed: () {
+        //     Navigator.of(context).pop();
+        //   },
+        // ),
+        // TextButton(
+        //   child: const Text("Clear History"),
+        //   onPressed: () {
+        //     Navigator.of(context).pop();
+        //     _calculationHistory.removeHistory();
+        //   },
+        // )
+        //   ],
+        // );
+        return Stack(
+          children: [
             TextButton(
               child: const Text("Nope"),
               onPressed: () {
@@ -70,48 +89,71 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
             );
           } else {
             List<Map<String, String>> history = snapshot.data!;
-            return listViewBuilderForHistory(history);
+            return history.isEmpty
+                ? Center(
+                    child: Text(
+                      'No history available',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? whiteColor
+                            : blackColor,
+                      ),
+                    ),
+                  )
+                : listViewBuilderForHistory(history);
           }
         },
       ),
     );
   }
 
-  ListView listViewBuilderForHistory(List<Map<String, String>> history) {
-    return ListView.builder(
-      itemCount: history.length,
-      itemBuilder: (BuildContext context, int index) {
-        Map<String, String> calculation = history[index];
-        return Dismissible(
-          key: UniqueKey(),
-          onDismissed: (direction) {
-            setState(() {
-              history.removeAt(index);
-            });
-            // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            //     content: Text("Calculation deleted"),
-            //     duration: Duration(seconds: 1)));
-            showToast("Calculation deleted", context);
-          },
-          direction: DismissDirection.endToStart,
-          background: Container(
-            color: bgColorForListtile,
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: 20),
-            child: const Icon(Icons.delete, color: Colors.white),
+  SingleChildScrollView listViewBuilderForHistory(
+      List<Map<String, String>> history) {
+    return SingleChildScrollView(
+      reverse: false,
+      child: Column(
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            reverse: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: history.length,
+            itemBuilder: (BuildContext context, int index) {
+              Map<String, String> calculation = history[index];
+              return Dismissible(
+                key: UniqueKey(),
+                onDismissed: (direction) {
+                  setState(() {
+                    history.removeAt(index);
+                  });
+                  //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  // content: Text("Calculation deleted"),
+                  // duration: Duration(seconds: 1)));
+                  showToast("Calculation deleted", context);
+                },
+                direction: DismissDirection.endToStart,
+                background: Container(
+                  color: bgColorForListtile,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 20),
+                  child: const Icon(Icons.delete, color: whiteColor),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+                  child: Container(
+                    decoration: containerDecoration(),
+                    child: ListTile(
+                      title: listTextForHistory(calculation),
+                      subtitle: listSubTextForHistory(calculation),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-            child: Container(
-              decoration: containerDecoration(),
-              child: ListTile(
-                title: listTextForHistory(calculation),
-                subtitle: listSubTextForHistory(calculation),
-              ),
-            ),
-          ),
-        );
-      },
+        ],
+      ),
     );
   }
 }
