@@ -6,3 +6,4 @@ const lightScaffoldBgColor = Colors.white;
 
 const blackColor = Colors.black;
 const whiteColor = Colors.white;
+const greyColor = Color.fromARGB(255, 162, 162, 162);

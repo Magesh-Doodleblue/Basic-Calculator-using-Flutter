@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'colors.dart';
+
 Text listSubTextForHistory(Map<String, String> calculation) {
   return Text(
     calculation["result"]!,
@@ -24,5 +26,14 @@ BoxDecoration containerDecoration() {
 TextStyle styleFont(int size) {
   return TextStyle(
     fontSize: size.toDouble(),
+  );
+}
+
+TextStyle dialogTextStyle(BuildContext context, double size) {
+  return TextStyle(
+    color: Theme.of(context).brightness == Brightness.dark
+        ? whiteColor
+        : blackColor,
+    fontSize: size,
   );
 }

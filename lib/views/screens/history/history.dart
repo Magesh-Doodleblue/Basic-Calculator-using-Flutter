@@ -19,41 +19,42 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return AlertDialog(
-        //   // backgroundColor: Color.fromARGB(255, 26, 26, 26),
-        //   title: const Text("Clear History"),
-        //   content: const Text("Do you want to Clear all History?"),
-        //   actions: [
-        // TextButton(
-        //   child: const Text("Nope"),
-        //   onPressed: () {
-        //     Navigator.of(context).pop();
-        //   },
-        // ),
-        // TextButton(
-        //   child: const Text("Clear History"),
-        //   onPressed: () {
-        //     Navigator.of(context).pop();
-        //     _calculationHistory.removeHistory();
-        //   },
-        // )
-        //   ],
-        // );
-        return Stack(
-          children: [
+        return AlertDialog(
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? blackColor
+              : whiteColor,
+          title: Text(
+            "Clear History",
+            style: dialogTextStyle(context, 24),
+          ),
+          content: SizedBox(
+            width: 600,
+            // height: 100.0,
+            child: Text(
+              "Do you want to Clear all History?",
+              style: dialogTextStyle(context, 19),
+            ),
+          ),
+          actions: [
             TextButton(
-              child: const Text("Nope"),
+              child: Text(
+                "Nope",
+                style: dialogTextStyle(context, 18),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text("Clear History"),
+              child: Text(
+                "Clear History",
+                style: dialogTextStyle(context, 18),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 _calculationHistory.removeHistory();
               },
-            )
+            ),
           ],
         );
       },
@@ -91,14 +92,19 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
             List<Map<String, String>> history = snapshot.data!;
             return history.isEmpty
                 ? Center(
-                    child: Text(
-                      'No history available',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? whiteColor
-                            : blackColor,
-                      ),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 100,
+                        ),
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Image.asset("assets/no_history_dark.gif")
+                            : Image.asset("assets/no_history_light.gif"),
+                        Text(
+                          'No history available',
+                          style: dialogTextStyle(context, 24),
+                        ),
+                      ],
                     ),
                   )
                 : listViewBuilderForHistory(history);
