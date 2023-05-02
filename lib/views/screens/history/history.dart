@@ -28,21 +28,21 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
           //checkiing theme for showing dialogbox color.
           title: Text(
             "Clear History",
-            style: dialogTextStyle(context, 24),
+            style: dialogTextStyle(context, 22),
           ),
           content: SizedBox(
             width: 600, //dialogbox width
             // height: 100.0,
             child: Text(
               "Do you want to Clear all History?",
-              style: dialogTextStyle(context, 19),
+              style: dialogTextStyle(context, 17),
             ),
           ),
           actions: [
             TextButton(
               child: Text(
                 "Nope",
-                style: dialogTextStyle(context, 18),
+                style: dialogTextStyle(context, 16),
               ),
               onPressed: () {
                 Navigator.of(context).pop(); //closes the dialogbox
@@ -51,10 +51,13 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
             TextButton(
               child: Text(
                 "Clear History",
-                style: dialogTextStyle(context, 18),
+                style: dialogTextStyle(context, 16),
               ),
               onPressed: () {
                 _calculationHistory.removeHistory();
+                setState(() {
+                  isDialogData = !isDialogData;
+                });
                 //delete all the values in singleton class of map for calc history.
                 Navigator.of(context).pop(); //closes the dialogbox
               },
@@ -65,6 +68,7 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
     );
   }
 
+  bool isDialogData = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,43 +83,50 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
           ),
         ],
       ),
-      body: FutureBuilder<List<Map<String, String>>>(
-        future: Future.delayed(const Duration(milliseconds: 0),
-            () => CalculationHistory().getHistory()),
-        //frequently calling the getHistory() data inside of singketon class. when the data changes it reflected in the UI simultaneouly.
-        builder: (BuildContext context,
-            AsyncSnapshot<List<Map<String, String>>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            List<Map<String, String>> history = snapshot.data!;
-            return history.isEmpty
-                ? Center(
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 100,
-                        ),
-                        Theme.of(context).brightness == Brightness.dark
-                            ? Image.asset("assets/no_history_dark.gif")
-                            : Image.asset("assets/no_history_light.gif"),
-                        Text(
-                          'No history available',
-                          style: dialogTextStyle(context, 24),
-                        ),
-                      ],
-                    ),
-                  )
-                : listViewBuilderForHistory(history);
-          }
-        },
-      ),
+      body: isDialogData
+          ? futureBuilderForGettingHistory()
+          : futureBuilderForGettingHistory(),
+    );
+  }
+
+  FutureBuilder<List<Map<String, String>>> futureBuilderForGettingHistory() {
+    return FutureBuilder<List<Map<String, String>>>(
+      future: Future.delayed(const Duration(milliseconds: 0),
+          () => CalculationHistory().getHistory()),
+      //frequently calling the getHistory() data inside of singketon class. when the data changes it reflected in the UI simultaneouly.
+      builder: (BuildContext context,
+          AsyncSnapshot<List<Map<String, String>>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'), //showinig error in UI
+          );
+        } else {
+          List<Map<String, String>> history = snapshot.data!;
+          return history.isEmpty
+              ? Center(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 100,
+                      ),
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Image.asset("assets/no_history_dark.gif")
+                          : Image.asset("assets/no_history_light.gif"),
+                      //showing gif for each themes by checking the brightness.
+                      Text(
+                        'No history available',
+                        style: dialogTextStyle(context, 24),
+                      ),
+                    ],
+                  ),
+                )
+              : listViewBuilderForHistory(history);
+        }
+      },
     );
   }
 

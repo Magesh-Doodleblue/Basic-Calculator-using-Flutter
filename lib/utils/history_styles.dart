@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'colors.dart';
 
@@ -30,7 +31,7 @@ TextStyle styleFont(int size) {
 }
 
 TextStyle dialogTextStyle(BuildContext context, double size) {
-  return TextStyle(
+  return GoogleFonts.poppins(
     color: Theme.of(context).brightness == Brightness.dark
         ? whiteColor
         : blackColor,
