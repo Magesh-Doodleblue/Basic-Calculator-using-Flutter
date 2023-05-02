@@ -14,21 +14,24 @@ class CalculationHistoryPage extends StatefulWidget {
 
 class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
   final CalculationHistory _calculationHistory = CalculationHistory();
+  //creating instance for singletonclass.
 
   dialogBox(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          //dialogbox name is AlertDialog.
           backgroundColor: Theme.of(context).brightness == Brightness.dark
               ? blackColor
               : whiteColor,
+          //checkiing theme for showing dialogbox color.
           title: Text(
             "Clear History",
             style: dialogTextStyle(context, 24),
           ),
           content: SizedBox(
-            width: 600,
+            width: 600, //dialogbox width
             // height: 100.0,
             child: Text(
               "Do you want to Clear all History?",
@@ -42,7 +45,7 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
                 style: dialogTextStyle(context, 18),
               ),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); //closes the dialogbox
               },
             ),
             TextButton(
@@ -51,8 +54,9 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
                 style: dialogTextStyle(context, 18),
               ),
               onPressed: () {
-                Navigator.of(context).pop();
                 _calculationHistory.removeHistory();
+                //delete all the values in singleton class of map for calc history.
+                Navigator.of(context).pop(); //closes the dialogbox
               },
             ),
           ],
@@ -69,7 +73,7 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
         actions: [
           IconButton(
             onPressed: () {
-              dialogBox(context);
+              dialogBox(context); //calling dialogbox when clicking delete icon
             },
             icon: const Icon(Icons.delete),
           ),
@@ -78,6 +82,7 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
       body: FutureBuilder<List<Map<String, String>>>(
         future: Future.delayed(const Duration(milliseconds: 0),
             () => CalculationHistory().getHistory()),
+        //frequently calling the getHistory() data inside of singketon class. when the data changes it reflected in the UI simultaneouly.
         builder: (BuildContext context,
             AsyncSnapshot<List<Map<String, String>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -117,13 +122,14 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
   SingleChildScrollView listViewBuilderForHistory(
       List<Map<String, String>> history) {
     return SingleChildScrollView(
-      reverse: false,
+      reverse: false, //change the focus to reverse in listview builder
       child: Column(
         children: [
           ListView.builder(
             shrinkWrap: true,
             reverse: true,
-            physics: const NeverScrollableScrollPhysics(),
+            //to show the items in the UI reverse order.
+            physics: const NeverScrollableScrollPhysics(), //used to scroll
             itemCount: history.length,
             itemBuilder: (BuildContext context, int index) {
               Map<String, String> calculation = history[index];
@@ -132,11 +138,13 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
                 onDismissed: (direction) {
                   setState(() {
                     history.removeAt(index);
+                    //remove the item inside of map when user swipes in UI.
                   });
                   //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   // content: Text("Calculation deleted"),
                   // duration: Duration(seconds: 1)));
                   showToast("Calculation deleted", context);
+                  //toast for deleting
                 },
                 direction: DismissDirection.endToStart,
                 background: Container(
@@ -151,7 +159,9 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
                     decoration: containerDecoration(),
                     child: ListTile(
                       title: listTextForHistory(calculation),
+                      //calculation inputs in UI
                       subtitle: listSubTextForHistory(calculation),
+                      //calculation result in UI
                     ),
                   ),
                 ),

@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
           context,
           MaterialPageRoute(
             builder: (context) => const CalculationHistoryPage(),
+            //page navigation to calculator history
           ),
         );
         break;
@@ -42,13 +43,15 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: widget.toggleDarkMode,
+            //toggle function for darkmode value getting and changing
             icon: Icon(widget.isDarkEnable ? Icons.dark_mode : Icons.sunny),
           ),
           PopupMenuButton<String>(
-            tooltip: "History",
+            tooltip: "Options",
             onSelected: handleClick,
             itemBuilder: (BuildContext context) {
               return {'History'}.map((String choice) {
+                //add more items in option menu by add extra items inside of return statement with the "history".
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
@@ -78,15 +81,19 @@ class _HomePageState extends State<HomePage> {
           crossAxisSpacing: 1.0,
           mainAxisSpacing: 1.0,
         ),
-        itemCount: calcButtonList.length,
+        itemCount: calcButtonList.length, //length for gridview builder.
         itemBuilder: (BuildContext context, int index) {
           String buttonText = calcButtonList[index];
           return InkWell(
+            //used for gesture detection in smooth way
             onTap: () {
               btnClicked(buttonText);
+              //calling the function whenever the user clicks any button in UI of gridview builder.
             },
             child: Container(
+              //creating each container for calc buttons
               decoration: gridContainerDecoration(context),
+              //decoration in separate file
               child: customOutlineButton(buttonText),
             ),
           );
@@ -96,7 +103,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Column inputAndOutput() {
-    final theme = Theme.of(context);
+    final theme = Theme.of(context); //theme variable for chceking theme
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.end,
@@ -104,32 +111,36 @@ class _HomePageState extends State<HomePage> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: AnimatedDefaultTextStyle(
+            //used for transition of text and has duration of 200ms
             textAlign: TextAlign.end,
             style: GoogleFonts.poppins(
               fontSize: isEqualto ? 48 : 36,
               fontWeight: FontWeight.w500,
               color:
                   theme.brightness == Brightness.dark ? whiteColor : blackColor,
+              //checking theme for lightmode and darkmode
             ),
             duration: const Duration(milliseconds: 200),
             child: Text(
-              text,
+              text, //Given input by the USER in UI.
             ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: AnimatedDefaultTextStyle(
+            //used for transition of text and has duration of 200ms
             textAlign: TextAlign.end,
             style: GoogleFonts.poppins(
               fontSize: isEqualto ? 36 : 48,
               fontWeight: FontWeight.w500,
               color:
                   theme.brightness == Brightness.dark ? whiteColor : blackColor,
+              //checking theme for lightmode and darkmode
             ),
             duration: const Duration(milliseconds: 200),
             child: Text(
-              res,
+              res, //Results of calculation in UI.
             ),
           ),
         ),
@@ -138,13 +149,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget customOutlineButton(String val) {
-    final theme = Theme.of(context);
-
+    final theme = Theme.of(context); //theme variable for chceking theme
     return SizedBox(
       child: Padding(
         padding: const EdgeInsets.all(13.0),
         child: Text(
-          val,
+          val, //numbers and symbols in calc
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: val == "CLEAR"
@@ -157,6 +167,7 @@ class _HomePageState extends State<HomePage> {
                 : FontWeight.w600,
             color:
                 theme.brightness == Brightness.dark ? whiteColor : blackColor,
+            //checking theme for lightmode and darkmode
           ),
         ),
       ),
@@ -167,6 +178,7 @@ class _HomePageState extends State<HomePage> {
     if (btnText == "CLEAR") {
       setState(() {
         isEqualto = true;
+        //bool used for text transition using AnimatedDefaultTextStyle two texts
         text = "";
         res = "";
       });
@@ -177,23 +189,28 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         if (text.isNotEmpty) {
           text += " $btnText ";
+          //prints the symbol after the number in Ui inside of text variable
         }
       });
     } else if (btnText == "=") {
       setState(() {
         isEqualto = false;
+        //bool used for text transition using AnimatedDefaultTextStyle two texts
         if (text.isNotEmpty) {
           List<String> parts = text.split(" ");
+          //splits the inputs into list for calc
           if (parts.length >= 3) {
             double result = double.parse(parts[0]);
             String op = "";
             for (int i = 1; i < parts.length; i++) {
+              //looppp through the values of list to check the symbol and value
               String part = parts[i];
               if (part == "+" || part == "-" || part == "x" || part == "/") {
                 op = part;
               } else {
                 double num = double.parse(part);
                 if (op == "+") {
+                  //perfoms actual calculation for inputs
                   result += num;
                 } else if (op == "-") {
                   result -= num;
@@ -208,14 +225,16 @@ class _HomePageState extends State<HomePage> {
             }
             if (result % 1 == 0) {
               res = result.toInt().toString();
+              //checks the result has digits after decimals?
             } else {
               res = result
                   .toStringAsFixed(2)
                   .replaceAll(RegExp(r"([.]*0)(?!.*\d)"), "");
+              //setting 2 values after decimal
             }
             CalculationHistory().addCalculation({"text": text, "result": res});
           } else {
-            res = text;
+            res = text; //if input less than 3, shows in UI
           }
         }
       });
@@ -223,6 +242,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         if (text.isNotEmpty) {
           List<String> parts = text.split(" ");
+          //splits the inputs into list for calc
           String lastPart = parts[parts.length - 1];
           double num = double.tryParse(lastPart) ?? 0;
           text = text.substring(0, text.lastIndexOf(lastPart)) +
@@ -230,30 +250,35 @@ class _HomePageState extends State<HomePage> {
         }
       });
       CalculationHistory().addCalculation({"text": text, "result": res});
+      //add the calculation value inside of map inside of singleton class.
     } else if (btnText == "DEL") {
       setState(() {
         if (text.isNotEmpty) {
           text = text.substring(0, text.length - 1);
+          //delete the last value in UI inside of text variable.
         }
       });
     } else if (btnText == "%") {
       setState(() {
         if (text.isNotEmpty) {
           List<String> parts = text.split(" ");
+          //splits the inputs into list for calc
           if (parts.isNotEmpty) {
             double num = double.parse(parts.last);
+            //make the last value square inside of text varibale values.
             num /= 100;
             text = text.substring(0, text.length - parts.last.length) +
-                num.toString();
+                num.toString(); // add the updated "%" value into the end of text variable without affecting the value before the "%" symbol.
           }
         }
       });
       CalculationHistory().addCalculation({"text": text, "result": res});
+      //add the calculation value inside of map inside of singleton class.
     } else {
       setState(() {
         text += btnText;
+        //if user didnt press any va,ue but pressed the symbol. it adds them into text variable to show in the UI.
       });
-      CalculationHistory().addCalculation({"text": text, "result": res});
     }
   }
 }
