@@ -3,38 +3,24 @@ import 'package:flutter/material.dart';
 
 import 'colors.dart';
 
-final darkTheme = ThemeData(
-  brightness: Brightness.dark,
-  useMaterial3: true,
-  scaffoldBackgroundColor: darkScaffoldBgColor,
-  textTheme: GoogleFonts.poppinsTextTheme().apply(
-    bodyColor: whiteColor,
-    displayColor: whiteColor,
-  ),
-  // textTheme: const TextTheme(
-  //   titleLarge: TextStyle(
-  //     color: whiteColor,
-  //   ),
-  //   bodyMedium: TextStyle(
-  //     color: whiteColor,
-  //   ),
-  // ),
-);
+class ThemeChange {
+  final darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    useMaterial3: true,
+    scaffoldBackgroundColor: AppColors.darkScaffoldBgColor,
+    textTheme: GoogleFonts.poppinsTextTheme().apply(
+      bodyColor: AppColors.whiteColor,
+      displayColor: AppColors.whiteColor,
+    ),
+  );
 
-final lightTheme = ThemeData(
-  brightness: Brightness.light,
-  useMaterial3: true,
-  scaffoldBackgroundColor: lightScaffoldBgColor,
-  textTheme: GoogleFonts.poppinsTextTheme().apply(
-    bodyColor: blackColor,
-    displayColor: blackColor,
-  ),
-  // textTheme: const TextTheme(
-  //   titleLarge: TextStyle(
-  //     color: blackColor,
-  //   ),
-  //   bodyMedium: TextStyle(
-  //     color: blackColor,
-  //   ),
-  // ),
-);
+  final lightTheme = ThemeData(
+    brightness: Brightness.light,
+    useMaterial3: true,
+    scaffoldBackgroundColor: AppColors.lightScaffoldBgColor,
+    textTheme: GoogleFonts.poppinsTextTheme().apply(
+      bodyColor: AppColors.blackColor,
+      displayColor: AppColors.blackColor,
+    ),
+  );
+}

@@ -33,8 +33,8 @@ TextStyle styleFont(int size) {
 TextStyle dialogTextStyle(BuildContext context, double size) {
   return GoogleFonts.poppins(
     color: Theme.of(context).brightness == Brightness.dark
-        ? whiteColor
-        : blackColor,
+        ? AppColors.whiteColor
+        : AppColors.blackColor,
     fontSize: size,
   );
 }

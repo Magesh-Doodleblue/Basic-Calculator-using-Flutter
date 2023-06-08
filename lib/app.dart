@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Calculator',
       debugShowCheckedModeBanner: false,
-      theme: isDarkEnable ? darkTheme : lightTheme,
+      theme: isDarkEnable ? ThemeChange().darkTheme : ThemeChange().lightTheme,
       home: HomePage(
         toggleDarkMode: _toggleDarkMode,
         isDarkEnable: isDarkEnable,

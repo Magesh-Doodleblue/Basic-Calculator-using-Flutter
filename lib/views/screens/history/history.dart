@@ -25,8 +25,8 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
         return AlertDialog(
           //dialogbox name is AlertDialog.
           backgroundColor: Theme.of(context).brightness == Brightness.dark
-              ? blackColor
-              : whiteColor,
+              ? AppColors.blackColor
+              : AppColors.whiteColor,
           //checkiing theme for showing dialogbox color.
           title: Text(
             "Clear History",
@@ -62,6 +62,7 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
                 });
                 //delete all the values in singleton class of map for calc history.
                 Navigator.of(context).pop(); //closes the dialogbox
+                ShowFlutterToast().showToast("Calculation deleted", context);
               },
             ),
           ],
@@ -156,15 +157,15 @@ class _CalculationHistoryPageState extends State<CalculationHistoryPage> {
                   //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   // content: Text("Calculation deleted"),
                   // duration: Duration(seconds: 1)));
-                  showToast("Calculation deleted", context);
+                  ShowFlutterToast().showToast("Calculation deleted", context);
                   //toast for deleting
                 },
                 direction: DismissDirection.endToStart,
                 background: Container(
-                  color: bgColorForListtile,
+                  color: AppColors.bgColorForListtile,
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(right: 20),
-                  child: const Icon(Icons.delete, color: whiteColor),
+                  child: const Icon(Icons.delete, color: AppColors.whiteColor),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8, right: 8, top: 8),

@@ -27,9 +27,8 @@ class _HomePageState extends State<HomePage> {
       content: NotificationContent(
         id: 1,
         channelKey: 'important_channel',
-        title: 'New Notification',
-        body:
-            'You have a new message You have a new message You have a new message You have a new message',
+        title: 'You have selected history',
+        body: 'You viewed the history of the calculator',
         notificationLayout: NotificationLayout.BigPicture,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
@@ -132,8 +131,9 @@ class _HomePageState extends State<HomePage> {
             style: GoogleFonts.poppins(
               fontSize: isEqualto ? 48 : 36,
               fontWeight: FontWeight.w500,
-              color:
-                  theme.brightness == Brightness.dark ? whiteColor : blackColor,
+              color: theme.brightness == Brightness.dark
+                  ? AppColors.whiteColor
+                  : AppColors.blackColor,
               //checking theme for lightmode and darkmode
             ),
             duration: const Duration(milliseconds: 200),
@@ -150,8 +150,9 @@ class _HomePageState extends State<HomePage> {
             style: GoogleFonts.poppins(
               fontSize: isEqualto ? 36 : 48,
               fontWeight: FontWeight.w500,
-              color:
-                  theme.brightness == Brightness.dark ? whiteColor : blackColor,
+              color: theme.brightness == Brightness.dark
+                  ? AppColors.whiteColor
+                  : AppColors.blackColor,
               //checking theme for lightmode and darkmode
             ),
             duration: const Duration(milliseconds: 200),
@@ -181,8 +182,9 @@ class _HomePageState extends State<HomePage> {
             fontWeight: val == "CLEAR" || val == "DEL"
                 ? FontWeight.bold
                 : FontWeight.w600,
-            color:
-                theme.brightness == Brightness.dark ? whiteColor : blackColor,
+            color: theme.brightness == Brightness.dark
+                ? AppColors.whiteColor
+                : AppColors.blackColor,
             //checking theme for lightmode and darkmode
           ),
         ),
