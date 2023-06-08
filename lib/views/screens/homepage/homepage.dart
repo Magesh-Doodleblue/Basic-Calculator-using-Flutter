@@ -4,10 +4,12 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:calculator/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pedometer/pedometer.dart';
 import '../../../model/history_singleton.dart';
 import '../../../utils/constant.dart';
 import '../../../utils/homepage_styles.dart';
 import '../history/history.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback toggleDarkMode;
@@ -22,6 +24,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Stream<StepCount> _stepCountStream;
+  String _stepCount = '0';
+
+  Future<void> _requestPermission() async {
+    final PermissionStatus status =
+        await Permission.activityRecognition.request();
+    if (status != PermissionStatus.granted) {
+      print('Permission denied');
+      // Handle permission denied scenario
+    }
+  }
+
   void showNotification() {
     AwesomeNotifications().createNotification(
       content: NotificationContent(
@@ -46,6 +60,29 @@ class _HomePageState extends State<HomePage> {
         // page navigation to calculator history
         break;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initPedometer();
+    _requestPermission();
+  }
+
+  Future<void> _initPedometer() async {
+    try {
+      Pedometer pedometer = Pedometer();
+      _stepCountStream = Pedometer.stepCountStream;
+      _stepCountStream.listen(_onStepCount);
+    } catch (e) {
+      print('Pedometer initialization failed: $e');
+    }
+  }
+
+  void _onStepCount(StepCount event) {
+    setState(() {
+      _stepCount = event.steps.toString();
+    });
   }
 
   @override
@@ -88,33 +125,28 @@ class _HomePageState extends State<HomePage> {
 
   SizedBox gridViewBuilderForKeyboard(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height / 2.4,
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          childAspectRatio: 1.41,
-          crossAxisSpacing: 1.0,
-          mainAxisSpacing: 1.0,
-        ),
-        itemCount: calcButtonList.length, //length for gridview builder.
-        itemBuilder: (BuildContext context, int index) {
-          String buttonText = calcButtonList[index];
-          return InkWell(
-            //used for gesture detection in smooth way
-            onTap: () {
-              btnClicked(buttonText);
-              //calling the function whenever the user clicks any button in UI of gridview builder.
-            },
-            child: Container(
-              //creating each container for calc buttons
-              decoration: gridContainerDecoration(context),
-              //decoration in separate file
-              child: customOutlineButton(buttonText),
-            ),
-          );
-        },
-      ),
-    );
+        height: MediaQuery.of(context).size.height / 2.4,
+        child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                childAspectRatio: 1.41,
+                crossAxisSpacing: 1.0,
+                mainAxisSpacing: 1.0),
+            itemCount: calcButtonList.length, //length for gridview builder.
+            itemBuilder: (BuildContext context, int index) {
+              String buttonText = calcButtonList[index];
+              return InkWell(
+                  //used for gesture detection in smooth way
+                  onTap: () {
+                    btnClicked(buttonText);
+                    //calling the function whenever the user clicks any button in UI of gridview builder.
+                  },
+                  child: Container(
+                      //creating each container for calc buttons
+                      decoration: gridContainerDecoration(context),
+                      //decoration in separate file
+                      child: customOutlineButton(buttonText)));
+            }));
   }
 
   Column inputAndOutput() {
@@ -124,43 +156,35 @@ class _HomePageState extends State<HomePage> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AnimatedDefaultTextStyle(
-            //used for transition of text and has duration of 200ms
-            textAlign: TextAlign.end,
-            style: GoogleFonts.poppins(
-              fontSize: isEqualto ? 48 : 36,
-              fontWeight: FontWeight.w500,
-              color: theme.brightness == Brightness.dark
-                  ? AppColors.whiteColor
-                  : AppColors.blackColor,
-              //checking theme for lightmode and darkmode
-            ),
-            duration: const Duration(milliseconds: 200),
-            child: Text(
-              text, //Given input by the USER in UI.
-            ),
-          ),
-        ),
+            padding: const EdgeInsets.all(8.0),
+            child: AnimatedDefaultTextStyle(
+                //used for transition of text and has duration of 200ms
+                textAlign: TextAlign.end,
+                style: GoogleFonts.poppins(
+                    fontSize: isEqualto ? 48 : 36,
+                    fontWeight: FontWeight.w500,
+                    color: theme.brightness == Brightness.dark
+                        ? AppColors.whiteColor
+                        : AppColors.blackColor
+                    //checking theme for lightmode and darkmode
+                    ),
+                duration: const Duration(milliseconds: 200),
+                child: Text(text))), //Given input by the USER in UI.
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AnimatedDefaultTextStyle(
-            //used for transition of text and has duration of 200ms
-            textAlign: TextAlign.end,
-            style: GoogleFonts.poppins(
-              fontSize: isEqualto ? 36 : 48,
-              fontWeight: FontWeight.w500,
-              color: theme.brightness == Brightness.dark
-                  ? AppColors.whiteColor
-                  : AppColors.blackColor,
-              //checking theme for lightmode and darkmode
-            ),
-            duration: const Duration(milliseconds: 200),
-            child: Text(
-              res, //Results of calculation in UI.
-            ),
-          ),
-        ),
+            padding: const EdgeInsets.all(8.0),
+            child: AnimatedDefaultTextStyle(
+                //used for transition of text and has duration of 200ms
+                textAlign: TextAlign.end,
+                style: GoogleFonts.poppins(
+                    fontSize: isEqualto ? 36 : 48,
+                    fontWeight: FontWeight.w500,
+                    color: theme.brightness == Brightness.dark
+                        ? AppColors.whiteColor
+                        : AppColors.blackColor),
+                //checking theme for lightmode and darkmode
+                duration: const Duration(milliseconds: 200),
+                child: Text(res))), //Results of calculation in UI.
+        Text('Step Count: $_stepCount', style: const TextStyle(fontSize: 24))
       ],
     );
   }
@@ -168,28 +192,23 @@ class _HomePageState extends State<HomePage> {
   Widget customOutlineButton(String val) {
     final theme = Theme.of(context); //theme variable for chceking theme
     return SizedBox(
-      child: Padding(
-        padding: const EdgeInsets.all(13.0),
-        child: Text(
-          val, //numbers and symbols in calc
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: val == "CLEAR"
-                ? 15
-                : val == "DEL"
-                    ? 17
-                    : 24,
-            fontWeight: val == "CLEAR" || val == "DEL"
-                ? FontWeight.bold
-                : FontWeight.w600,
-            color: theme.brightness == Brightness.dark
-                ? AppColors.whiteColor
-                : AppColors.blackColor,
-            //checking theme for lightmode and darkmode
-          ),
-        ),
-      ),
-    );
+        child: Padding(
+            padding: const EdgeInsets.all(13.0),
+            child: Text(val, //numbers and symbols in calc
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: val == "CLEAR"
+                        ? 15
+                        : val == "DEL"
+                            ? 17
+                            : 24,
+                    fontWeight: val == "CLEAR" || val == "DEL"
+                        ? FontWeight.bold
+                        : FontWeight.w600,
+                    color: theme.brightness == Brightness.dark
+                        ? AppColors.whiteColor
+                        : AppColors.blackColor))));
+    //checking theme for lightmode and darkmode
   }
 
   void btnClicked(String btnText) {
