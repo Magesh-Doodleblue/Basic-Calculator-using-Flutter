@@ -1,5 +1,6 @@
 // ignore_for_file: unrelated_type_equality_checks, library_private_types_in_public_api
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:calculator/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,16 +22,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  void showNotification() {
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 1,
+        channelKey: 'important_channel',
+        title: 'New Notification',
+        body:
+            'You have a new message You have a new message You have a new message You have a new message',
+        notificationLayout: NotificationLayout.BigPicture,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      ),
+    );
+  }
+
   void handleClick(String value) {
     switch (value) {
       case 'History':
+        showNotification();
         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const CalculationHistoryPage(),
-            //page navigation to calculator history
-          ),
-        );
+            context,
+            MaterialPageRoute(
+                builder: (context) => const CalculationHistoryPage()));
+        // page navigation to calculator history
         break;
     }
   }
@@ -50,13 +64,15 @@ class _HomePageState extends State<HomePage> {
             tooltip: "Options",
             onSelected: handleClick,
             itemBuilder: (BuildContext context) {
-              return {'History'}.map((String choice) {
-                //add more items in option menu by add extra items inside of return statement with the "history".
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
+              return {'History'}.map(
+                (String choice) {
+                  //add more items in option menu by add extra items inside of return statement with the "history".
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                },
+              ).toList();
             },
           ),
         ],
@@ -234,7 +250,8 @@ class _HomePageState extends State<HomePage> {
             }
             CalculationHistory().addCalculation({"text": text, "result": res});
           } else {
-            res = text; //if input less than 3, shows in UI
+            res = text;
+            //if input less than 3, shows in UI
           }
         }
       });
@@ -268,7 +285,8 @@ class _HomePageState extends State<HomePage> {
             //make the last value square inside of text varibale values.
             num /= 100;
             text = text.substring(0, text.length - parts.last.length) +
-                num.toString(); // add the updated "%" value into the end of text variable without affecting the value before the "%" symbol.
+                num.toString();
+            // add the updated "%" value into the end of text variable without affecting the value before the "%" symbol.
           }
         }
       });
